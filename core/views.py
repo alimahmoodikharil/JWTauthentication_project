@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.exceptions import AuthenticationFailed, NotAuthenticated
 from rest_framework import status
 import datetime
 import jwt
@@ -48,3 +48,20 @@ class SignInView(APIView):
         }
         return response
     
+
+class UserView(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if token is None:
+            raise NotAuthenticated('Not Authenticated')
+        
+        try:
+            payload = jwt.decode(token, 'secret', algorithms='HS256')
+
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Singin Session Expired!')
+        
+        user = CustomUser.objects.filter(id=payload['id']).first()
+        serializer = CustomUserSerializer(user)
+        return Response(serializer.data)
