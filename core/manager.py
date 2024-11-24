@@ -8,7 +8,7 @@ class CustomerUserManager(BaseUserManager):
         
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-        user.password = make_password(password)
+        user.password = make_password(password, hasher= 'pbkdf2_sha256')
         user.save(using= self._db)
         return user
 

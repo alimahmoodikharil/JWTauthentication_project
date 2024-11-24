@@ -64,4 +64,14 @@ class UserView(APIView):
         
         user = CustomUser.objects.filter(id=payload['id']).first()
         serializer = CustomUserSerializer(user)
-        return Response(serializer.data)
+        return Response(serializer.data, status= status.HTTP_200_OK)
+    
+
+class LogoutView(APIView):
+    def post(self,request):
+        response = Response()
+        response.delete_cookie('jwt')
+        response.data = {
+            'Status': 'Successful'
+        }
+        return response
