@@ -29,7 +29,7 @@ SECRET_KEY = env('PROJECT_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('PROJECT_DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0']
 
 
 # Application definition
@@ -82,8 +82,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('PROJECT_DB_NAME'),
+        'USER': env('PROJECT_DB_USER'),
+        'PASSWORD': env('PROJECT_DB_PASSWORD'),
+        'HOST': 'postgres_db',
+        'PORT':'5432',
     }
 }
 
